@@ -5,14 +5,27 @@ import json
 import sys
 import requests
 
-
 class JsonError(Exception):
     pass
 
 class HTTPError(Exception):
     pass
 
+class MetaWeatherException(Exception):
+    pass
+
+
 class WeatherProvider:
+    def __init__(self, name):
+        self.name = name
+
+    def get_temperature(self, city):
+            raise NotImplementedError
+
+
+class MetaWeather(WeatherProvider):
+    def __init__(self):
+        super().__init__('MetaWeather')
 
     def get_woeid(self, city):
         url = 'https://www.metaweather.com/api/location/search/?query={}'.format(city)
@@ -25,7 +38,6 @@ class WeatherProvider:
         except:
             raise JsonError
 
-
     def temperature_from_woeid(self, woeid):
         url = 'https://www.metaweather.com/api/location/{}/'.format(woeid)
         response = requests.get(url)
@@ -37,7 +49,10 @@ class WeatherProvider:
         except:
             raise JsonError
 
-
     def get_temperature(self, city):
-        woeid = WeatherProvider.get_woeid(self, city)
-        return WeatherProvider.temperature_from_woeid(self, woeid)
+        try:
+            woeid = self.get_woeid(city)
+            temperature = self.temperature_from_woeid(woeid)
+            return temperature
+        except:
+            raise MetaWeatherException

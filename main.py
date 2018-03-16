@@ -2,10 +2,11 @@
 
 import argparse
 import sys
-from mrlibrary import WeatherProvider
+from mrlibrary import MetaWeather
 
 class WrongArguments(Exception):
     pass
+
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -16,13 +17,13 @@ def parse_args():
 def main():
     try:
         args = parse_args()
-        provider = WeatherProvider()
-        temperature = WeatherProvider.get_temperature(provider, args.city)
-
-        TempetarurePrint = 'Temperature in {} : {}'.format(args.city, temperature)
-        print(TempetarurePrint + chr(176))
+        provider = MetaWeather()
+        forecast = provider.get_temperature(args.city)
+        forecastprint = 'Temperature in {} : {}°'.format(args.city, forecast)
+        print(forecastprint)
     except:
         raise WrongArguments
+
 
 if __name__ == '__main__':
     main()
