@@ -5,6 +5,9 @@ import json
 import sys
 import requests
 
+class CityDoesNotExist(Exception):
+    pass
+
 class JsonError(Exception):
     pass
 
@@ -13,7 +16,6 @@ class HTTPError(Exception):
 
 class MetaWeatherException(Exception):
     pass
-
 
 class WeatherProvider:
     def __init__(self, name):

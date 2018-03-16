@@ -3,6 +3,7 @@
 import argparse
 import sys
 from mrlibrary import MetaWeather
+from cityregistry import CityChecker
 
 class WrongArguments(Exception):
     pass
@@ -17,6 +18,8 @@ def parse_args():
 def main():
     try:
         args = parse_args()
+        citieslist = CityChecker()
+        citieslist.checkcity(args.city)
         provider = MetaWeather()
         forecast = provider.get_temperature(args.city)
         forecastprint = 'Temperature in {} : {}°'.format(args.city, forecast)
