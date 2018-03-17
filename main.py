@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
-import sys
-from mrlibrary import MetaWeather
+from mrlibrary import MetaWeather, DarkSky
 from cityregistry import CityRegistry
 
 class WrongArguments(Exception):
@@ -18,13 +17,17 @@ def parse_args():
 def main():
     try:
         args = parse_args()
-        citieslist = CityRegistry('city_coordinates.json')
-        a = citieslist.getcity(args.city)
-        name = a.name
-        provider = MetaWeather()
-        forecast = provider.get_temperature(name)
-        forecastprint = 'Temperature in {} : {}°'.format(name, forecast)
-        print(forecastprint)
+        city = args.city
+        checkerror = CityRegistry('city_coordinates.json').repairname(city)
+        if checkerror is not None:
+            name = checkerror
+            provider = MetaWeather()
+            provider.get_temperature(name)
+
+            provider = DarkSky()
+            provider.get_temperature(name)
+        else:
+            print('Please enter a valid city name')
     except:
         raise WrongArguments
 
