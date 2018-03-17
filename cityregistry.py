@@ -1,24 +1,30 @@
 #!/usr/bin/env python3
 
-import ast
+import json
 
 class CityNotFound(Exception):
     pass
 
-class CityChecker():
-    def __init__(self):
-        with open('coordinates.txt', 'r') as file:
-            data = file.read().replace('\n','')
-        data = str(data)
-        data = data.lower()
-        self.cities = ast.literal_eval(data)
-        file.close()
+class City:
+    def __init__(self, name, coordinates):
+        self.name = name
+        self.latitude = coordinates[0]
+        self.longitude = coordinates[1]
+
+
+class CityRegistry:
+    def __init__(self, file_name):
+        self.cities = {}
+        with open(file_name) as f:
+            data = json.load(f)
+            for name in data:
+                self.cities[name.lower()] = City(name, data[name])
 
 
     def checkcity(self,city):
-        city = city.lower()
-        if city in self.cities:
-            return self.cities[city]
+        if city.lower() in self.cities:
+            return self.cities[city.lower()]
         else:
             raise CityNotFound
+
 
