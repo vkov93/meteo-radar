@@ -21,10 +21,8 @@ class CityRegistry:
                 self.cities[name.lower()] = City(name, data[name])
 
 
-    def checkcity(self,city):
+    def getcity(self,city):
         if city.lower() in self.cities:
             return self.cities[city.lower()]
         else:
             raise CityNotFound
-
-

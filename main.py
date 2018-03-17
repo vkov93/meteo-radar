@@ -19,7 +19,7 @@ def main():
     try:
         args = parse_args()
         citieslist = CityRegistry('city_coordinates.json')
-        a = citieslist.checkcity(args.city)
+        a = citieslist.getcity(args.city)
         name = a.name
         provider = MetaWeather()
         forecast = provider.get_temperature(name)
