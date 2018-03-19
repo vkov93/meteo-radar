@@ -25,8 +25,3 @@ class CityRegistry:
             return self.cities[city.lower()]
         except:
             raise CityNotFound
-
-
-
-
-

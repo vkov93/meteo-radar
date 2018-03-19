@@ -1,13 +1,7 @@
 #!/usr/bin/env python3
 
-import argparse
 import json
-import sys
 import requests
-from cityregistry import CityRegistry, City
-
-class CityDoesNotExist(Exception):
-    pass
 
 class JsonError(Exception):
     pass
@@ -81,7 +75,3 @@ class DarkSky(WeatherProvider):
             return round((j['currently']['temperature']-32)/1.8, 3)       #Fahrenheit into Celsius
         except:
             raise JsonError
-
-
-
-
