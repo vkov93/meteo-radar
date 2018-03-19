@@ -4,7 +4,7 @@ import argparse
 import json
 import sys
 import requests
-from cityregistry import CityRegistry
+from cityregistry import CityRegistry, City
 
 class CityDoesNotExist(Exception):
     pass
@@ -25,18 +25,22 @@ class WeatherProvider:
     def __init__(self, name):
         self.name = name
 
-    def get_temperature(self, city):
-            raise NotImplementedError
-
 
 class MetaWeather(WeatherProvider):
-    def __init__(self):
+    def __init__(self, city):
         super().__init__('MetaWeather')
+        try:
+            woeid = self.get_woeid(city.name)
+            temperature = round(self.temperature_from_woeid(woeid), 3)
+            result = 'Metaweather: Temperature in {} : {}°'.format(city.name, temperature)
+            print(result)
+        except:
+            raise MetaWeatherException
 
     def get_woeid(self, city):
         url = 'https://www.metaweather.com/api/location/search/?query={}'.format(city)
         response = requests.get(url)
-        if response.status_code != 200:
+        if response.status_code != requests.codes.ok:
             raise HTTPError
         j = response.json()
         try:
@@ -47,7 +51,7 @@ class MetaWeather(WeatherProvider):
     def temperature_from_woeid(self, woeid):
         url = 'https://www.metaweather.com/api/location/{}/'.format(woeid)
         response = requests.get(url)
-        if response.status_code != 200:
+        if response.status_code != requests.codes.ok:
             raise HTTPError
         j = response.json()
         try:
@@ -55,25 +59,22 @@ class MetaWeather(WeatherProvider):
         except:
             raise JsonError
 
-    def get_temperature(self, city):
-        try:
-            woeid = self.get_woeid(city)
-            temperature = round(self.temperature_from_woeid(woeid), 3)
-            result = 'Metaweather: Temperature in {} : {}°'.format(city, temperature)
-            print(result)
-        except:
-            raise MetaWeatherException
-
 
 class DarkSky(WeatherProvider):
-    def __init__(self):
+    def __init__(self, city):
         super().__init__('DarkSky')
+        try:
+            temperature = self.temperature_from_ds(city.latitude, city.longitude)
+            result = 'DarkSky: Temperature in {} : {}°'.format(city.name, temperature)
+            print(result)
+        except:
+            raise DarkSkyException
 
     def temperature_from_ds(self, latitude, longitude):
         url = 'https://api.darksky.net/forecast/051577d3ef68f75953e9c9a2247582e1/{},{}'\
-            .format(latitude,longitude)
+            .format(latitude, longitude)
         response = requests.get(url)
-        if response.status_code != 200:
+        if response.status_code != requests.codes.ok:
             raise HTTPError
         j = response.json()
         try:
@@ -81,13 +82,6 @@ class DarkSky(WeatherProvider):
         except:
             raise JsonError
 
-    def get_temperature(self, city):
-        try:
-            a = CityRegistry('city_coordinates.json')
-            coordinates = a.get_coordinates(city)
-            temperature = self.temperature_from_ds(coordinates.latitude, coordinates.longitude)
-            result = 'DarkSky: Temperature in {} : {}°'.format(city, temperature)
-            print(result)
-        except:
-            raise DarkSkyException
+
+
 

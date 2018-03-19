@@ -20,15 +20,13 @@ class CityRegistry:
             for name in data:
                 self.cities[name.lower()] = City(name, data[name])
 
-    def get_coordinates(self,city):
-        if city.lower() in self.cities:
+    def find(self,city):
+        try:
             return self.cities[city.lower()]
-        else:
+        except:
             raise CityNotFound
 
-    def repairname(self, name):
-        try:
-            a = self.cities[name.lower()]
-            return a.name
-        except:
-            return None
+
+
+
+

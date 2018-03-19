@@ -2,7 +2,7 @@
 
 import argparse
 from mrlibrary import MetaWeather, DarkSky
-from cityregistry import CityRegistry
+from cityregistry import CityRegistry, City
 
 class WrongArguments(Exception):
     pass
@@ -15,21 +15,21 @@ def parse_args():
 
 
 def main():
+    args = parse_args()
+    name = args.city
+    cities = CityRegistry('city_coordinates.json')
     try:
-        args = parse_args()
-        city = args.city
-        checkerror = CityRegistry('city_coordinates.json').repairname(city)
-        if checkerror is not None:
-            name = checkerror
-            provider = MetaWeather()
-            provider.get_temperature(name)
-
-            provider = DarkSky()
-            provider.get_temperature(name)
-        else:
-            print('Please enter a valid city name')
-    except:
-        raise WrongArguments
+        city = cities.find(name)
+    except KeyError:
+        print('fuck your mom')
+    try:
+        MetaWeather(city)
+    except Exception:
+        print('Metaweather server is unreachable')
+    try:
+        DarkSky(city)
+    except Exception:
+        print('DarkSky server is unreachable')
 
 
 if __name__ == '__main__':
