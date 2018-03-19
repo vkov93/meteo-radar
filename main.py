@@ -7,6 +7,8 @@ from cityregistry import CityRegistry, City
 class WrongArguments(Exception):
     pass
 
+class HTTPError(Exception):
+    pass
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -18,18 +20,18 @@ def main():
     args = parse_args()
     name = args.city
     cities = CityRegistry('city_coordinates.json')
-    try:
-        city = cities.find(name)
-    except KeyError:
-        print('fuck your mom')
-    try:
-        MetaWeather(city)
-    except Exception:
-        print('Metaweather server is unreachable')
-    try:
-        DarkSky(city)
-    except Exception:
-        print('DarkSky server is unreachable')
+    city = cities.find(name)
+    if city is not None:
+        try:
+            MetaWeather(city)
+        except HTTPError:
+            print('Metaweather server is unreachable')
+        try:
+            DarkSky(city)
+        except HTTPError:
+            print('DarkSky server is unreachable')
+    else:
+        pass
 
 
 if __name__ == '__main__':

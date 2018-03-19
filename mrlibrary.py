@@ -19,7 +19,6 @@ class WeatherProvider:
     def __init__(self, name):
         self.name = name
 
-
 class MetaWeather(WeatherProvider):
     def __init__(self, city):
         super().__init__('MetaWeather')
