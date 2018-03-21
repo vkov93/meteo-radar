@@ -3,6 +3,7 @@
 import json
 import requests
 
+
 class JsonError(Exception):
     pass
 
@@ -25,8 +26,7 @@ class MetaWeather(WeatherProvider):
         try:
             woeid = self.get_woeid(city.name)
             temperature = round(self.temperature_from_woeid(woeid), 3)
-            result = 'Metaweather: Temperature in {} : {}°'.format(city.name, temperature)
-            print(result)
+            self.result = 'Metaweather: Temperature in {} : {}°'.format(city.name, temperature)
         except:
             raise MetaWeatherException
 
@@ -58,8 +58,7 @@ class DarkSky(WeatherProvider):
         super().__init__('DarkSky')
         try:
             temperature = self.temperature_from_ds(city.latitude, city.longitude)
-            result = 'DarkSky: Temperature in {} : {}°'.format(city.name, temperature)
-            print(result)
+            self.result = 'DarkSky: Temperature in {} : {}°'.format(city.name, temperature)
         except:
             raise DarkSkyException
 

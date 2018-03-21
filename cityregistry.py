@@ -21,8 +21,7 @@ class CityRegistry:
                 self.cities[name.lower()] = City(name, data[name])
 
     def find(self,city):
-        try:
+        if city.lower() in self.cities:
             return self.cities[city.lower()]
-        except KeyError:
-            print('City not found')
+        else:
             return None
