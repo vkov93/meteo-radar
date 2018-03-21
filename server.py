@@ -10,8 +10,8 @@ async def handle_temp(request):
     cities = CityRegistry('city_coordinates.json')
     city = cities.find(name)
     if city is not None:
-        a = DarkSky(city).result
-        b = MetaWeather(city).result
+        a = DarkSky().get_temperature(city)
+        b = MetaWeather().get_temperature(city)
         text = a + '\n' + b
     else:
         text = 'Please enter valid city name - \n'
@@ -27,9 +27,9 @@ async def handle_api(request):
     city = cities.find(name)
     if city is not None:
         if method.lower() == 'darksky':
-            text = DarkSky(city).result
+            text = DarkSky().get_temperature(city)
         elif method.lower() == 'metaweather':
-            text = MetaWeather(city).result
+            text = MetaWeather().get_temperature(city)
         else:
             pass
     else:

@@ -28,11 +28,11 @@ def main():
         city = cities.find(name)
         if city is not None:
             try:
-                print(MetaWeather(city).result)
+                print(MetaWeather().get_temperature(city))
             except HTTPError:
                 print('Metaweather server is unreachable')
             try:
-                print(DarkSky(city).result)
+                print(DarkSky().get_temperature(city))
             except HTTPError:
                 print('DarkSky server is unreachable')
         else:
